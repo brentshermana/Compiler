@@ -1,0 +1,30 @@
+#!/bin/bash
+
+rm -rf temp
+mkdir temp
+if [ $(echo $1 | cut -c1-1) == "a" ]; then
+    if [ $1 == "a2" ]; then
+        pkg=parse
+    elif [ $1 == "a3" ]; then
+        pkg=typecheck
+    elif [ $1 == "a4" ]; then
+        pkg=irrun
+    elif [ $1 == "a5" ]; then
+        pkg=assm
+    elif [ $1 == "a6" ]; then
+        pkg=assm_opt
+    elif [ $1 == "a7" ]; then
+        pkg=pa7
+    fi
+    mkdir temp/xi
+    cp tests/$pkg/testcases/* temp/xi
+    cp tests/$pkg/answers/* temp/xi
+    xth -compilerpath . -testpath temp/xi -workpath temp tests/$pkg/xthScript
+elif [ $(echo $1 | cut -c1-1) == "f" ]; then
+    an=$(echo $1 | cut -c2-2)
+    pkg=failedcases_a$an
+    xth -compilerpath . -testpath tests/$pkg -workpath temp tests/$pkg/xthScript
+else
+    pa=pa$1
+    xth -compilerpath . -testpath ~/xth/tests/$pa/ -workpath ./temp/ ~/xth/tests/$pa/xthScript
+fi
